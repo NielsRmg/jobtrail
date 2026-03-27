@@ -1,29 +1,34 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./src/config/db');
-const applicationRoutes = require('./src/routes/applicationRoutes');
-const errorHandler = require('./src/middlewares/errorHandler');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./src/config/db");
+const applicationRoutes = require("./src/routes/applicationRoutes");
+const authRoutes = require("./src/routes/authRoutes");
+const auth = require("./src/middlewares/auth");
+const errorHandler = require("./src/middlewares/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middlewares
-app.use(cors());
+app.use(
+    cors({
+        origin: ["http://localhost:5173", "https://jobtrail.onrender.com"],
+    }),
+);
+
 app.use(express.json());
 
-// Connexion à MongoDB
 connectDB();
 
-// Routes
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'JobTrail API is running' });
+app.get("/api/health", (req, res) => {
+    res.json({status: "OK", message: "JobTrail API is running"});
 });
-app.use('/api/applications', applicationRoutes);
 
-// Gestion des erreurs (toujours en dernier)
+app.use("/api/auth", authRoutes);
+app.use("/api/applications", auth, applicationRoutes);
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
+    console.log(`Serveur démarré sur le port ${PORT}`);
 });

@@ -173,7 +173,7 @@ export function ApplicationForm({ open, onClose, onSubmit, application }: Props)
           <DialogDescription className="sr-only">Formulaire de candidature</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
           {/* Entreprise et poste */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
