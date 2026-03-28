@@ -9,13 +9,13 @@ export const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   ghosted: { label: "Sans réponse", color: "bg-red-300" },
 };
 
-export const URGENCY_COLORS: Record<string, { border: string; bg: string }> = {
-  red: { border: "border-l-red-500", bg: "bg-red-500/5" },
-  darkOrange: { border: "border-l-orange-600", bg: "bg-orange-500/5" },
-  orange: { border: "border-l-orange-400", bg: "bg-orange-400/5" },
-  yellow: { border: "border-l-yellow-400", bg: "bg-yellow-400/5" },
-  neutral: { border: "border-l-slate-300 dark:border-l-slate-600", bg: "" },
-  none: { border: "border-l-slate-200 dark:border-l-slate-700", bg: "" },
+export const URGENCY_COLORS: Record<string, { border: string; bg: string; cssColor: string }> = {
+  red:        { border: "border-l-red-500",    bg: "bg-red-500/5",    cssColor: "#ef4444" },
+  darkOrange: { border: "border-l-orange-600", bg: "bg-orange-500/5", cssColor: "#ea580c" },
+  orange:     { border: "border-l-orange-400", bg: "bg-orange-400/5", cssColor: "#fb923c" },
+  yellow:     { border: "border-l-yellow-400", bg: "bg-yellow-400/5", cssColor: "#facc15" },
+  neutral:    { border: "border-l-slate-300 dark:border-l-slate-600", bg: "", cssColor: "#94a3b8" },
+  none:       { border: "border-l-slate-200 dark:border-l-slate-700", bg: "", cssColor: "#64748b" },
 };
 
 export const TABS = [

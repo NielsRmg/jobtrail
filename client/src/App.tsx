@@ -1,8 +1,8 @@
-import {useState, useEffect, useCallback, useMemo} from "react";
-import {LoginScreen} from "@/components/login-screen";
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {Badge} from "@/components/ui/badge";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { LoginScreen } from "@/components/login-screen";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
     Select,
     SelectContent,
@@ -10,17 +10,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import {Separator} from "@/components/ui/separator";
-import {ThemeToggle} from "@/components/theme-toggle";
-import {ApplicationCard} from "@/components/application-card";
-import {ApplicationForm} from "@/components/application-form";
-import {TimelineDialog} from "@/components/timeline-dialog";
-import {RejectDialog} from "@/components/reject-dialog";
-import {ConfirmDialog} from "@/components/confirm-dialog";
-import {api, auth, Application} from "@/lib/api";
-import {SOURCES, TABS} from "@/lib/constants";
-import {useDebounce} from "@/lib/hooks";
-import {Plus, Search, AlertTriangle, Briefcase} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { ApplicationCard } from "@/components/application-card";
+import { ApplicationForm } from "@/components/application-form";
+import { TimelineDialog } from "@/components/timeline-dialog";
+import { RejectDialog } from "@/components/reject-dialog";
+import { ConfirmDialog } from "@/components/confirm-dialog";
+import { api, auth, Application } from "@/lib/api";
+import { SOURCES, TABS } from "@/lib/constants";
+import { useDebounce } from "@/lib/hooks";
+import { Plus, Search, AlertTriangle, Briefcase } from "lucide-react";
 
 function App() {
     const [allApplications, setAllApplications] = useState<Application[]>([]);
@@ -29,13 +29,11 @@ function App() {
     const [initialLoad, setInitialLoad] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(auth.isLoggedIn());
 
-    // Filtres
     const [activeTab, setActiveTab] = useState<string>("active");
     const [sourceFilter, setSourceFilter] = useState<string>("all");
     const [searchQuery, setSearchQuery] = useState("");
     const debouncedSearch = useDebounce(searchQuery, 150);
 
-    // Dialogs
     const [formOpen, setFormOpen] = useState(false);
     const [editingApp, setEditingApp] = useState<Application | null>(null);
     const [timelineOpen, setTimelineOpen] = useState(false);
@@ -75,7 +73,6 @@ function App() {
         }
     }, [fetchApplications, isLoggedIn]);
 
-    // Filtrage par onglet + tri par urgence
     const filteredApplications = useMemo(() => {
         const currentTab = TABS.find((t) => t.value === activeTab);
         if (!currentTab) return allApplications;
@@ -95,7 +92,6 @@ function App() {
         return filtered;
     }, [allApplications, activeTab]);
 
-    // Compteurs par onglet
     const tabCounts = useMemo(() => {
         const counts: Record<string, number> = {};
         for (const tab of TABS) {
@@ -142,10 +138,7 @@ function App() {
         setDeleteOpen(true);
     };
 
-    const handleAddEvent = async (
-        id: string,
-        event: { type: string; note?: string; date: string },
-    ) => {
+    const handleAddEvent = async (id: string, event: { type: string; note?: string; date: string }) => {
         try {
             await api.addTimelineEvent(id, event);
             fetchApplications();
@@ -161,74 +154,46 @@ function App() {
                 note: reason || "Candidature refusée",
                 date: new Date().toISOString(),
             });
-            await api.update(id, {followupDate: undefined});
+            await api.update(id, { followupDate: undefined });
             fetchApplications();
         } catch (error) {
             console.error("Erreur refus:", error);
         }
     };
 
-    const openEdit = (app: Application) => {
-        setEditingApp(app);
-        setFormOpen(true);
-    };
-
-    const openTimeline = (app: Application) => {
-        setTimelineApp(app);
-        setTimelineOpen(true);
-    };
-
-    const openReject = (app: Application) => {
-        setRejectApp(app);
-        setRejectOpen(true);
-    };
-
-    const closeForm = () => {
-        setFormOpen(false);
-        setEditingApp(null);
-    };
-
-    const handleLogout = () => {
-        auth.logout();
-        setIsLoggedIn(false);
-    };
+    const openEdit = (app: Application) => { setEditingApp(app); setFormOpen(true); };
+    const openTimeline = (app: Application) => { setTimelineApp(app); setTimelineOpen(true); };
+    const openReject = (app: Application) => { setRejectApp(app); setRejectOpen(true); };
+    const closeForm = () => { setFormOpen(false); setEditingApp(null); };
+    const handleLogout = () => { auth.logout(); setIsLoggedIn(false); };
 
     if (!isLoggedIn) {
-        return <LoginScreen onLogin={() => setIsLoggedIn(true)}/>;
+        return <LoginScreen onLogin={() => setIsLoggedIn(true)} />;
     }
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            {/* Header */}
             <header className="border-b sticky top-0 bg-background z-10">
                 <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Briefcase className="h-5 w-5"/>
+                        <Briefcase className="h-5 w-5" />
                         <h1 className="text-xl font-bold">JobTrail</h1>
                         {alerts.length > 0 && (
                             <Badge variant="destructive" className="flex items-center gap-1">
-                                <AlertTriangle className="h-3 w-3"/>
+                                <AlertTriangle className="h-3 w-3" />
                                 {alerts.length} en retard
                             </Badge>
                         )}
                     </div>
                     <div className="flex items-center gap-2">
-                        <Button
-                            onClick={() => {
-                                setEditingApp(null);
-                                setFormOpen(true);
-                            }}
-                        >
-                            <Plus className="h-4 w-4 mr-1"/> Nouvelle candidature
+                        <Button onClick={() => { setEditingApp(null); setFormOpen(true); }}>
+                            <Plus className="h-4 w-4 mr-1" /> Nouvelle candidature
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={handleLogout}>
-                            Déconnexion
-                        </Button>
-                        <ThemeToggle/>
+                        <Button variant="ghost" size="sm" onClick={handleLogout}>Déconnexion</Button>
+                        <ThemeToggle />
                     </div>
                 </div>
 
-                {/* Onglets */}
                 <div className="max-w-6xl mx-auto px-4">
                     <div className="flex gap-1">
                         {TABS.map((tab) => (
@@ -243,13 +208,9 @@ function App() {
                             >
                                 {tab.label}
                                 {tabCounts[tab.value] > 0 && (
-                                    <span
-                                        className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
-                                            activeTab === tab.value
-                                                ? "bg-primary/10 text-primary"
-                                                : "bg-muted text-muted-foreground"
-                                        }`}
-                                    >
+                                    <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
+                                        activeTab === tab.value ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                                    }`}>
                     {tabCounts[tab.value]}
                   </span>
                                 )}
@@ -260,111 +221,58 @@ function App() {
             </header>
 
             <main className="max-w-6xl mx-auto px-4 py-6">
-                {/* Filtres */}
                 <div className="flex gap-3 mb-6 flex-wrap">
                     <div className="relative flex-1 min-w-[200px]">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
-                        <Input
-                            placeholder="Rechercher entreprise, poste..."
-                            className="pl-9"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Rechercher entreprise, poste..." className="pl-9" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
                     <Select value={sourceFilter} onValueChange={setSourceFilter}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Source"/>
-                        </SelectTrigger>
+                        <SelectTrigger className="w-[180px]"><SelectValue placeholder="Source" /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Toutes les sources</SelectItem>
-                            {SOURCES.map((s) => (
-                                <SelectItem key={s} value={s}>
-                                    {s}
-                                </SelectItem>
-                            ))}
+                            {SOURCES.map((s) => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
                         </SelectContent>
                     </Select>
                 </div>
 
-                <Separator className="mb-6"/>
+                <Separator className="mb-6" />
 
-                {/* Liste */}
                 {loading ? (
                     <div className="text-center py-12 text-muted-foreground">Chargement...</div>
                 ) : filteredApplications.length === 0 ? (
                     <div className="text-center py-12">
-                        <Briefcase className="h-12 w-12 mx-auto text-muted-foreground mb-4"/>
+                        <Briefcase className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                         <p className="text-muted-foreground mb-4">
                             {activeTab === "active" && "Aucune candidature en cours"}
                             {activeTab === "wishlist" && "Aucune candidature en attente"}
                             {activeTab === "archived" && "Aucune candidature archivée"}
                         </p>
                         {activeTab !== "archived" && (
-                            <Button
-                                onClick={() => {
-                                    setEditingApp(null);
-                                    setFormOpen(true);
-                                }}
-                            >
-                                <Plus className="h-4 w-4 mr-1"/> Ajouter une candidature
+                            <Button onClick={() => { setEditingApp(null); setFormOpen(true); }}>
+                                <Plus className="h-4 w-4 mr-1" /> Ajouter une candidature
                             </Button>
                         )}
                     </div>
                 ) : (
-                    <div className="grid gap-3 transition-all">
-                        {filteredApplications.map((app, index) => (
-                            <div key={app._id} style={{animationDelay: `${index * 30}ms`}}>
-                                <ApplicationCard
-                                    application={app}
-                                    onEdit={openEdit}
-                                    onDelete={(id) => openDelete(id, app.company)}
-                                    onAddEvent={openTimeline}
-                                    onReject={openReject}
-                                />
-                            </div>
+                    <div className="grid gap-3">
+                        {filteredApplications.map((app) => (
+                            <ApplicationCard
+                                key={app._id}
+                                application={app}
+                                onEdit={openEdit}
+                                onDelete={(id) => openDelete(id, app.company)}
+                                onAddEvent={openTimeline}
+                                onReject={openReject}
+                            />
                         ))}
                     </div>
                 )}
             </main>
 
-            {/* Dialogs */}
-            <ApplicationForm
-                open={formOpen}
-                onClose={closeForm}
-                onSubmit={editingApp ? handleUpdate : handleCreate}
-                application={editingApp}
-            />
-
-            <TimelineDialog
-                open={timelineOpen}
-                onClose={() => {
-                    setTimelineOpen(false);
-                    setTimelineApp(null);
-                }}
-                onSubmit={handleAddEvent}
-                application={timelineApp}
-            />
-
-            <RejectDialog
-                open={rejectOpen}
-                onClose={() => {
-                    setRejectOpen(false);
-                    setRejectApp(null);
-                }}
-                onSubmit={handleReject}
-                application={rejectApp}
-            />
-
-            <ConfirmDialog
-                open={deleteOpen}
-                onClose={() => {
-                    setDeleteOpen(false);
-                    setDeleteId(null);
-                }}
-                onConfirm={handleDelete}
-                title="Supprimer cette candidature"
-                description={`La candidature chez ${deleteName} sera définitivement supprimée. Cette action est irréversible.`}
-            />
+            <ApplicationForm open={formOpen} onClose={closeForm} onSubmit={editingApp ? handleUpdate : handleCreate} application={editingApp} />
+            <TimelineDialog open={timelineOpen} onClose={() => { setTimelineOpen(false); setTimelineApp(null); }} onSubmit={handleAddEvent} application={timelineApp} />
+            <RejectDialog open={rejectOpen} onClose={() => { setRejectOpen(false); setRejectApp(null); }} onSubmit={handleReject} application={rejectApp} />
+            <ConfirmDialog open={deleteOpen} onClose={() => { setDeleteOpen(false); setDeleteId(null); }} onConfirm={handleDelete} title="Supprimer cette candidature" description={`La candidature chez ${deleteName} sera définitivement supprimée. Cette action est irréversible.`} />
         </div>
     );
 }
